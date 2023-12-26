@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kml/theme/fonts.dart';
-
+ 
 class Label extends StatefulWidget {
   Text title;
   Widget content;
