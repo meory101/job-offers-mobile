@@ -53,7 +53,7 @@ class _JobOfferState extends State<JobOffer> {
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height / 3,
+            height: MediaQuery.of(context).size.height / 3.5,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(mainborder),
               image: DecorationImage(
@@ -71,7 +71,7 @@ class _JobOfferState extends State<JobOffer> {
               children: [
                 Text(
                   widget.content,
-                  style: mainbfont,
+                  style: subbfont,
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),

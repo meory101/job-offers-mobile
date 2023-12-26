@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kml/theme/colors.dart';
+import 'package:kml/theme/fonts.dart';
 
 class Textform extends StatelessWidget {
   const Textform(
@@ -24,6 +26,8 @@ class Textform extends StatelessWidget {
             BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 7)
           ]),
       child: TextFormField(
+        style: subbfont,
+        cursorColor: maincolor,
         controller: controller,
         keyboardType: textInputType,
         obscureText: obscure,

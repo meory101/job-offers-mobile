@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kml/components/Text_form.dart';
-import 'package:kml/components/buttom.dart';
+import 'package:kml/components/text_form.dart';
+import 'package:kml/components/rectangular_button.dart';
 import 'package:kml/components/social_login.dart';
-import 'package:kml/theme/colors.dart';
- 
+import 'package:kml/pages/home.dart';
+import 'package:kml/pages/signup.dart';
+import 'package:kml/theme/fonts.dart';
 
 class Loginpage extends StatelessWidget {
   Loginpage({super.key});
@@ -15,75 +16,78 @@ class Loginpage extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
-            child: Container(
-          padding: EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          "assets/images/logo.jpg",
-                        ))),
+            child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(
+                    "assets/images/logo.jpg",
+                  ),
+                ),
               ),
-              // SizedBox(
-              //   height: 70,
-              // ),
-              // Container(
-              //   width: double.infinity,
-              //   height: 200,
-              //   alignment: Alignment.center,
-              //   child: Image.asset("assets/images/logo.jpg"),
-              //   // child: Text(
-              //   //   "KML",
-              //   //   style: TextStyle(
-              //   //       color: GlobalColors.mcolor,
-              //   //       fontSize: 35,
-              //   //       fontWeight: FontWeight.bold),
-              //   // ),
-              // ),
-              SizedBox(
-                height: 50,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Login to your Account",
+                    style: submain,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Textform(
+                    controller: emailController,
+                    text: 'Email',
+                    obscure: false,
+                    textInputType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Textform(
+                    controller: passwordController,
+                    text: 'Password',
+                    obscure: true,
+                    textInputType: TextInputType.visiblePassword,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  RecButton(
+                    fun: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Home();
+                          },
+                        ),
+                      );
+                    },
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    label: Text(
+                      'SignIn',
+                      style: subwfont,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const SocialLogin(),
+                ],
               ),
-              Text(
-                "Login to your Account",
-                style: TextStyle(
-                    color: maincolor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Textform(
-                controller: emailController,
-                text: 'Email',
-                obscure: false,
-                textInputType: TextInputType.emailAddress,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Textform(
-                controller: passwordController,
-                text: 'Password',
-                obscure: true,
-                textInputType: TextInputType.visiblePassword,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              ButtonGlobal(),
-              SizedBox(
-                height: 50,
-              ),
-              SocialLogin(),
-            ],
-          ),
+            ),
+          ],
         )),
       ),
       bottomNavigationBar: Container(
@@ -94,14 +98,24 @@ class Loginpage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Don\'t have an Account?",
-              style: TextStyle(color:maincolor),
+              "Don't have an Account? ",
+              style: submain,
             ),
             InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed("signup");
-                },
-                child: Text("Sign up"))
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Signup();
+                    },
+                  ),
+                );
+              },
+              child: Text(
+                "Sign up",
+                style: subbfont,
+              ),
+            )
           ],
         ),
       ),

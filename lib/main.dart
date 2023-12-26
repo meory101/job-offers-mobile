@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:kml/pages/Com_profile.dart';
+import 'package:kml/pages/com_profile.dart';
 import 'package:kml/pages/Splash.dart';
 import 'package:kml/pages/emp_profile.dart';
 import 'package:kml/pages/home.dart';
@@ -21,14 +21,9 @@ class Klm extends StatefulWidget {
 class _KlmState extends State<Klm> {
   @override
   Widget build(BuildContext context) {
-   return GetMaterialApp(
-      routes: {
-        "signup": (context) => Signup(),
-        "profile": (context) => EmpProfile(),
-        "comprofile":(context)=> Comprofile(),
-      },
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      home: Signup(),
     );
   }
 }

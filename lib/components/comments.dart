@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kml/components/profile_tag.dart';
+import 'package:kml/pages/Com_profile.dart';
+import 'package:kml/pages/show_emp_profile.dart';
 import 'package:kml/theme/fonts.dart';
 
 class CommentsSection extends StatefulWidget {
@@ -28,9 +30,18 @@ class _CommentsSectionState extends State<CommentsSection> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ProfileTag(
-                        image: AssetImage("assets/images/g2.jpg"),
-                        name: Text('user name')),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) {
+                            return ShowEmpProfile();
+                          },
+                        ));
+                      },
+                      child: ProfileTag(
+                          image: AssetImage("assets/images/g2.jpg"),
+                          name: Text('user name')),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 55, bottom: 10),
                       child: Text(

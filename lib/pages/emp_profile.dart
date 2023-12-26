@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:kml/components/drawer.dart';
 import 'package:kml/components/circular_button.dart';
 import 'package:kml/components/label.dart';
 import 'package:kml/components/profile_tag.dart';
 import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/pages/edit_profile_info.dart';
 import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
@@ -15,20 +19,90 @@ class EmpProfile extends StatefulWidget {
 }
 
 class _EmpProfileState extends State<EmpProfile> {
+  GlobalKey<ScaffoldState> skey = new GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: skey,
+      drawer: Drawer(
+        width: MediaQuery.of(context).size.width / 1.6,
+        child: Drawerwidget(
+          [
+            DrawerHeader(
+              padding: EdgeInsets.zero,
+              child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: maincolor),
+                accountName: Text(
+                  "Cristina Lemadol",
+                  style: titlew,
+                ),
+                accountEmail: Text("user account", style: subwfont),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/wn.jpg"),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return ProfileInfo();
+                  },
+                ));
+              },
+              child: ListTile(
+                leading: Icon(
+                  CupertinoIcons.person,
+                  color: maincolor,
+                  size: 20,
+                ),
+                title: Text(
+                  "Edit profile Info",
+                  style: subbfont,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                CupertinoIcons.bookmark,
+                color: maincolor,
+                size: 20,
+              ),
+              title: Text(
+                "My resume",
+                style: subbfont,
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+                color: maincolor,
+                size: 20,
+              ),
+              title: Text(
+                "Logout",
+                style: subbfont,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/t.jpg"),
-                      fit: BoxFit.cover),
+              InkWell(
+                onTap: () {
+                  print('bac image');
+                },
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/t.jpg"),
+                        fit: BoxFit.cover),
+                  ),
                 ),
               ),
               Positioned(
@@ -38,12 +112,17 @@ class _EmpProfileState extends State<EmpProfile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ProfileTag(
-                      image: AssetImage("assets/images/wn.jpg"),
-                      radius: 50,
-                      name: Text(
-                        '',
-                        style: titleb,
+                    InkWell(
+                      onTap: () {
+                        print('profile image');
+                      },
+                      child: ProfileTag(
+                        image: AssetImage("assets/images/wn.jpg"),
+                        radius: 50,
+                        name: Text(
+                          '',
+                          style: titleb,
+                        ),
                       ),
                     ),
                     Container(
@@ -59,7 +138,9 @@ class _EmpProfileState extends State<EmpProfile> {
                 top: 10,
                 left: 0,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    skey.currentState!.openDrawer();
+                  },
                   icon: Icon(
                     Icons.list,
                     color: Colors.white,
@@ -95,7 +176,7 @@ class _EmpProfileState extends State<EmpProfile> {
                           style: greyfont,
                         ),
                         icon: Icon(
-                          Icons.school,
+                          Icons.school_outlined,
                           color: maincolor,
                           size: 20,
                         ),
@@ -106,7 +187,7 @@ class _EmpProfileState extends State<EmpProfile> {
                       alignment: Alignment.topLeft,
                       child: Label(
                         icon: Icon(
-                          Icons.work,
+                          Icons.work_outline,
                           color: maincolor,
                           size: 20,
                         ),
@@ -125,7 +206,7 @@ class _EmpProfileState extends State<EmpProfile> {
                       alignment: Alignment.topLeft,
                       child: Label(
                         icon: Icon(
-                          Icons.science_rounded,
+                          Icons.science_outlined,
                           color: maincolor,
                           size: 20,
                         ),
@@ -141,7 +222,7 @@ class _EmpProfileState extends State<EmpProfile> {
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 20),
-                      height: MediaQuery.of(context).size.height / 4,
+                      height: MediaQuery.of(context).size.height / 3,
                       width: double.infinity,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -151,7 +232,7 @@ class _EmpProfileState extends State<EmpProfile> {
                             padding: EdgeInsets.only(bottom: 10),
                             margin: EdgeInsets.only(right: 10),
                             height: MediaQuery.of(context).size.height / 4,
-                            width: 200,
+                            width: MediaQuery.of(context).size.width / 1.5,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(color: bordercolor),
@@ -162,7 +243,7 @@ class _EmpProfileState extends State<EmpProfile> {
                               children: [
                                 Container(
                                   height:
-                                      MediaQuery.of(context).size.height / 4 -
+                                      MediaQuery.of(context).size.height / 3 -
                                           40,
                                   decoration: BoxDecoration(
                                       borderRadius:
@@ -183,26 +264,6 @@ class _EmpProfileState extends State<EmpProfile> {
                           );
                         },
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 20, top: 20),
-                      alignment: Alignment.topLeft,
-                      child: Label(
-                          icon: Icon(
-                            Icons.book,
-                            color: maincolor,
-                            size: 20,
-                          ),
-                          title: Text(
-                            'Resume',
-                            style: subbfont,
-                          ),
-                          content: RecButton(
-                            label: Text(
-                              'open file',
-                              style: subwfont,
-                            ),
-                          )),
                     ),
                   ],
                 ),

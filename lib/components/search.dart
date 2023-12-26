@@ -16,7 +16,7 @@ class _SearchState extends State<Search> {
     return Container(
       alignment: Alignment.center,
       width: double.infinity - 40,
-      height: 50,
+      height: 40,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(

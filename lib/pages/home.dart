@@ -1,4 +1,5 @@
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kml/components/filter.dart';
 import 'package:kml/components/job_offer.dart';
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: Container(
           decoration:
               BoxDecoration(borderRadius: BorderRadius.circular(subborder)),
-          height: 50,
+          height: 60,
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: BottomAppBar(
             child: FlashyTabBar(
@@ -40,7 +41,7 @@ class _HomeState extends State<Home> {
               items: [
                 FlashyTabBarItem(
                   icon: Icon(
-                    Icons.person,
+                  CupertinoIcons.person,
                     color: maincolor,
                   ),
                   title: Text(
@@ -50,14 +51,14 @@ class _HomeState extends State<Home> {
                 ),
                 FlashyTabBarItem(
                   icon: Icon(
-                    Icons.home,
+                   CupertinoIcons.cube_box,
                     color: maincolor,
                   ),
                   title: Text('Home', style: submain),
                 ),
                 FlashyTabBarItem(
                   icon: Icon(
-                    Icons.mail,
+                    CupertinoIcons.mail,
                     color: maincolor,
                   ),
                   title: Text('Inbox', style: submain),

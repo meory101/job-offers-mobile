@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kml/components/Text_form.dart';
-import 'package:kml/components/buttom.dart';
-import 'package:kml/components/social_login.dart';
-import 'package:kml/theme/colors.dart';
- 
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:kml/components/text_form.dart';
+import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/pages/Login.dart';
+import 'package:kml/pages/home.dart';
+import 'package:kml/theme/fonts.dart';
 
 class Signup extends StatelessWidget {
   Signup({super.key});
@@ -16,104 +17,123 @@ class Signup extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
-            child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // SizedBox(
-              //   height: 20,
-              // ),
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fitWidth,
-                        image: AssetImage(
-                          "assets/images/logo.jpg",
-                        ))),
-                // child: Center(
-                //   child: Image.asset(
-                //     "assets/images/logo.jpg",
-                //     height: 200,
-                //     alignment: Alignment.center,
-                //     fit: BoxFit.cover,
+            child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(
+                    "assets/images/logo.jpg",
+                  ),
+                ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Create New Account",
-                style: TextStyle(
-                    color:maincolor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Textform(
-                controller: userController,
-                text: 'Username',
-                obscure: false,
-                textInputType: TextInputType.name,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Textform(
-                controller: emailController,
-                text: 'Email',
-                obscure: false,
-                textInputType: TextInputType.emailAddress,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Textform(
-                controller: passwordController,
-                text: 'Password',
-                obscure: true,
-                textInputType: TextInputType.visiblePassword,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Column(
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Choose your account type"),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text("Employe"),
-                      Radio(
-                          value: "emp",
-                          groupValue: Employee,
-                          onChanged: (val) {
-                            // ignore: unused_local_variable
-                            var emp = val;
-                          }),
-                      Text("Company"),
-                      Radio(
-                          value: "emp",
-                          groupValue: Employee,
-                          onChanged: (val) {
-                            // ignore: unused_local_variable
-                            var emp = val;
-                          }),
-                    ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text("Create New Account", style: submain),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Textform(
+                    controller: userController,
+                    text: 'Username',
+                    obscure: false,
+                    textInputType: TextInputType.name,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Textform(
+                    controller: emailController,
+                    text: 'Email',
+                    obscure: false,
+                    textInputType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Textform(
+                    controller: passwordController,
+                    text: 'Password',
+                    obscure: true,
+                    textInputType: TextInputType.visiblePassword,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Choose your account type",
+                          style: submain,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            RecButton(
+                              label: Text(
+                                'User',
+                                style: subwfont,
+                              ),
+                              width: 100,
+                              height: 40,
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            RecButton(
+                              label: Text(
+                                'Company',
+                                style: subwfont,
+                              ),
+                              width: 100,
+                              height: 40,
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        RecButton(
+                          fun: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return Home();
+                                },
+                              ),
+                            );
+                          },
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          label: Text(
+                            'SignUp',
+                            style: subwfont,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              ButtonGlobal(),
-              SizedBox(
-                height: 30,
-              ),
-              SocialLogin(),
-            ],
-          ),
+            ),
+          ],
         )),
       ),
       bottomNavigationBar: Container(
@@ -124,17 +144,27 @@ class Signup extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Do you  have an Account?",
-              style: TextStyle(color:maincolor),
+              "Do you  have an Account? ",
+              style: submain,
             ),
-            InkWell(child: Text("Sign In"))
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Loginpage();
+                    },
+                  ),
+                );
+              },
+              child: Text(
+                "Sign In",
+                style: subbfont,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-}
-
-class Employee {
-  late String emp;
 }
