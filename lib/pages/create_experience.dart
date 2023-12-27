@@ -62,7 +62,7 @@ class _NewExpState extends State<NewExp> {
                   Textform(
                       controller: name2,
                       text: "Experience Years",
-                      textInputType: TextInputType.name,
+                      textInputType: TextInputType.number,
                       obscure: false),
                   SizedBox(
                     height: 50,

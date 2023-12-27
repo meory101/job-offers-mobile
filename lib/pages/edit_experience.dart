@@ -62,7 +62,7 @@ class _EditExpState extends State<EditExp> {
                   Textform(
                       controller: name2,
                       text: "Experience Years",
-                      textInputType: TextInputType.name,
+                      textInputType: TextInputType.number,
                       obscure: false),
                   SizedBox(
                     height: 50,
