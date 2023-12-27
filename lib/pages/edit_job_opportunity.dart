@@ -5,14 +5,14 @@ import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
 import 'package:kml/theme/fonts.dart';
 
-class EditExp extends StatefulWidget {
-  EditExp({super.key});
+class EditJobOpp extends StatefulWidget {
+  EditJobOpp({super.key});
 
   @override
-  State<EditExp> createState() => _EditExpState();
+  State<EditJobOpp> createState() => _EditJobOppState();
 }
 
-class _EditExpState extends State<EditExp> {
+class _EditJobOppState extends State<EditJobOpp> {
   final TextEditingController name = TextEditingController();
   final TextEditingController name1 = TextEditingController();
   final TextEditingController name2 = TextEditingController();
@@ -45,7 +45,7 @@ class _EditExpState extends State<EditExp> {
                   ),
                   Textform(
                       controller: name1,
-                      text: "Experience Title",
+                      text: "Job Opportunity Content",
                       textInputType: TextInputType.name,
                       obscure: false),
                   SizedBox(
@@ -53,15 +53,7 @@ class _EditExpState extends State<EditExp> {
                   ),
                   Textform(
                       controller: name2,
-                      text: "Experience Content",
-                      textInputType: TextInputType.name,
-                      obscure: false),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Textform(
-                      controller: name2,
-                      text: "Experience Years",
+                      text: "#Job Name",
                       textInputType: TextInputType.name,
                       obscure: false),
                   SizedBox(

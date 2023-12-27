@@ -23,7 +23,7 @@ class _KlmState extends State<Klm> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Signup(),
+      home: Splash(),
     );
   }
 }

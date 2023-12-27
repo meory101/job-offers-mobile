@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:kml/components/drawer.dart';
 import 'package:kml/components/circular_button.dart';
 import 'package:kml/components/label.dart';
 import 'package:kml/components/profile_tag.dart';
 import 'package:kml/components/rectangular_button.dart';
-import 'package:kml/pages/edit_profile_info.dart';
+import 'package:kml/pages/create_experience.dart';
+import 'package:kml/pages/create_job_opportunity.dart';
+import 'package:kml/pages/edit_experience.dart';
+import 'package:kml/pages/edit_Uprofile_info.dart';
+import 'package:kml/pages/show_experience.dart';
 import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
@@ -44,7 +50,7 @@ class _EmpProfileState extends State<EmpProfile> {
             ),
             InkWell(
               onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
+                Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) {
                     return ProfileInfo();
                   },
@@ -141,9 +147,10 @@ class _EmpProfileState extends State<EmpProfile> {
                   onPressed: () {
                     skey.currentState!.openDrawer();
                   },
-                  icon: Icon(
-                    Icons.list,
-                    color: Colors.white,
+                  icon: Image.asset(
+                    'assets/images/bars-sort.png',
+                    width: 15,
+                    height: 20,
                   ),
                 ),
               ),
@@ -228,40 +235,94 @@ class _EmpProfileState extends State<EmpProfile> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 5,
                         itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.only(bottom: 10),
-                            margin: EdgeInsets.only(right: 10),
-                            height: MediaQuery.of(context).size.height / 4,
-                            width: MediaQuery.of(context).size.width / 1.5,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: bordercolor),
-                              borderRadius: BorderRadius.circular(mainborder),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 3 -
-                                          40,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(mainborder),
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          'assets/images/ff.jpg',
+                          return FocusedMenuHolder(
+                              onPressed: () {},
+                              menuItems: <FocusedMenuItem>[
+                                FocusedMenuItem(
+                                    title: Text("show"),
+                                    trailingIcon: Icon(
+                                      Icons.play_circle_fill_rounded,
+                                      color: maincolor,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => ShowExp(),
                                         ),
-                                        fit: BoxFit.cover,
-                                      )),
-                                ),
-                                Text(
-                                  'flutter development',
-                                  style: subbfont,
-                                )
+                                      );
+                                    }),
+                                FocusedMenuItem(
+                                    title: Text("create new"),
+                                    trailingIcon: Icon(
+                                      Icons.create_new_folder,
+                                      color: maincolor,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => NewExp(),
+                                        ),
+                                      );
+                                    }),
+                                FocusedMenuItem(
+                                    title: Text("Edit"),
+                                    trailingIcon: Icon(
+                                      Icons.edit,
+                                      color: maincolor,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => EditExp(),
+                                        ),
+                                      );
+                                    }),
+                                FocusedMenuItem(
+                                    title: Text("Delete"),
+                                    trailingIcon: Icon(
+                                      Icons.delete,
+                                      color: maincolor,
+                                    ),
+                                    onPressed: () {})
                               ],
-                            ),
-                          );
+                              child: Container(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  margin: EdgeInsets.only(right: 10),
+                                  height:
+                                      MediaQuery.of(context).size.height / 4,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.5,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color: bordercolor),
+                                    borderRadius:
+                                        BorderRadius.circular(mainborder),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                    3 -
+                                                40,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                mainborder),
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                'assets/images/ff.jpg',
+                                              ),
+                                              fit: BoxFit.cover,
+                                            )),
+                                      ),
+                                      Text(
+                                        'flutter development',
+                                        style: subbfont,
+                                      )
+                                    ],
+                                  )));
                         },
                       ),
                     ),

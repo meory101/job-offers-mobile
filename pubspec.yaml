@@ -38,7 +38,7 @@ dependencies:
   hexcolor: ^3.0.1
   flutter_svg: ^2.0.9
   focused_menu: ^1.0.5
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

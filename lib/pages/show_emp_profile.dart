@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:kml/components/drawer.dart';
 import 'package:kml/components/circular_button.dart';
 import 'package:kml/components/label.dart';
 import 'package:kml/components/profile_tag.dart';
 import 'package:kml/components/rectangular_button.dart';
-import 'package:kml/pages/edit_profile_info.dart';
+import 'package:kml/pages/edit_Uprofile_info.dart';
+import 'package:kml/pages/show_experience.dart';
 import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
@@ -150,40 +153,62 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 5,
                         itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.only(bottom: 10),
-                            margin: EdgeInsets.only(right: 10),
-                            height: MediaQuery.of(context).size.height / 4,
-                            width: MediaQuery.of(context).size.width / 1.5,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: bordercolor),
-                              borderRadius: BorderRadius.circular(mainborder),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 3 -
-                                          40,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(mainborder),
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          'assets/images/ff.jpg',
+                          return FocusedMenuHolder(
+                              onPressed: () {},
+                              menuItems: <FocusedMenuItem>[
+                                FocusedMenuItem(
+                                    title: Text("show"),
+                                    trailingIcon: Icon(
+                                      Icons.play_circle_fill_rounded,
+                                      color: maincolor,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => ShowExp(),
                                         ),
-                                        fit: BoxFit.cover,
-                                      )),
-                                ),
-                                Text(
-                                  'flutter development',
-                                  style: subbfont,
-                                )
+                                      );
+                                    }),
+                             
                               ],
-                            ),
-                          );
+                              child: Container(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  margin: EdgeInsets.only(right: 10),
+                                  height:
+                                      MediaQuery.of(context).size.height / 4,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.5,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color: bordercolor),
+                                    borderRadius:
+                                        BorderRadius.circular(mainborder),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                    3 -
+                                                40,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                mainborder),
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                'assets/images/ff.jpg',
+                                              ),
+                                              fit: BoxFit.cover,
+                                            )),
+                                      ),
+                                      Text(
+                                        'flutter development',
+                                        style: subbfont,
+                                      )
+                                    ],
+                                  )));
                         },
                       ),
                     ),
