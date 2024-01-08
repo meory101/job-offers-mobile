@@ -8,11 +8,14 @@ class Textform extends StatelessWidget {
       required this.controller,
       required this.text,
       required this.textInputType,
-      required this.obscure});
+      required this.obscure,
+      this.val
+      });
   final TextEditingController controller;
   final String text;
   final TextInputType textInputType;
   final bool obscure;
+  final String? Function(String?)? val;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +29,7 @@ class Textform extends StatelessWidget {
             BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 7)
           ]),
       child: TextFormField(
+        validator:val,
         style: subbfont,
         cursorColor: maincolor,
         controller: controller,
