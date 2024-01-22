@@ -26,6 +26,12 @@ var subbfont = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w300,
 );
+var subpfont = TextStyle(
+  color: maincolor,
+  fontFamily: 'font',
+  fontSize: 14,
+  fontWeight: FontWeight.w300,
+);
 var subwfont = TextStyle(
   color: const Color.fromARGB(255, 255, 255, 255),
   fontFamily: 'font',

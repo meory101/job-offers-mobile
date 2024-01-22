@@ -1,20 +1,77 @@
+import 'dart:convert';
+
+// import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:kml/components/text_form.dart';
+import 'package:http/http.dart' as http;
 import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/components/text_form.dart';
+import 'package:kml/db/links.dart';
 import 'package:kml/pages/Login.dart';
 import 'package:kml/pages/home.dart';
+import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Signup extends StatelessWidget {
-  Signup({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+int selectedtype = 0;
+
+class _SignUpState extends State<SignUp> {
   final TextEditingController userController = TextEditingController();
+
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
   final GlobalKey<FormState> fkey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
+    singUp() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (fkey.currentState!.validate()) {
+        try {
+          var url = selectedtype == 0 ? Uri.parse(usignup) : Uri.parse(csignup);
+          Map body = {
+            'name': userController.text,
+            'email': emailController.text,
+            'password': passwordController.text
+          };
+          http.Response response = await http.post(url, body: body);
+          body = jsonDecode(response.body);
+          if (body['status'] == 'success') {
+            selectedtype == 0
+                ? prefs.setString('user_id', body['userid'])
+                : prefs.setString('com_id', body['comid']);
+            prefs.setString('token', body['token']);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) {
+                  return const Home();
+                },
+              ),
+            );
+          } else {
+          return  AwesomeDialog(
+              context: context,
+              dialogType: DialogType.error,
+              animType: AnimType.rightSlide,
+              title: 'Error',
+              desc: 'Something went wrong please try again later.',
+              btnCancelOnPress: () {},
+              btnOkOnPress: () {},
+              )..show();
+          }
+        } catch (e) {}
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -55,8 +112,9 @@ class Signup extends StatelessWidget {
                               .hasMatch(p0)) {
                             return 'name format is wrong';
                           }
-                        } else
+                        } else {
                           return 'name can\'t be empty';
+                        }
                         return null;
                       },
                       controller: userController,
@@ -70,16 +128,16 @@ class Signup extends StatelessWidget {
                     Textform(
                       val: (p0) {
                         if (p0!.isNotEmpty) {
+
                           if (!RegExp(
                                   r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                               .hasMatch(p0)) {
                             return 'Email format is wrong';
                           }
-                          if (p0 != 'kml@gmail.com') {
-                            return 'email is not found';
-                          }
-                        } else
+                        } else {
+
                           return 'Email can\'t be empty';
+                        }
                         return null;
                       },
                       controller: emailController,
@@ -101,8 +159,9 @@ class Signup extends StatelessWidget {
                           // setState(() {
                           // password = p0;
                           // });
-                        } else
+                        } else {
                           return 'password can\'t be empty';
+                        }
                         return null;
                       },
                       controller: passwordController,
@@ -122,30 +181,53 @@ class Signup extends StatelessWidget {
                             "Choose your account type",
                             style: submain,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              RecButton(
-                                label: Text(
-                                  'User',
-                                  style: subwfont,
+                              InkWell(
+                                onTap: () {
+
+                                  setState(() {
+                                    selectedtype = 0;
+                                  });
+                                },
+                                child: RecButton(
+                                  color: selectedtype == 0
+                                      ? maincolor
+                                      : Colors.white,
+                                  label: Text(
+                                    'User',
+                                    style:
+                                        selectedtype == 0 ? subwfont : subpfont,
+                                  ),
+                                  width: 100,
+                                  height: 40,
                                 ),
-                                width: 100,
-                                height: 40,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 30,
                               ),
-                              RecButton(
-                                label: Text(
-                                  'Company',
-                                  style: subwfont,
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    selectedtype = 1;
+                                  });
+                                },
+                                child: RecButton(
+                                  label: Text(
+                                    'Company',
+                                    style:
+                                        selectedtype == 1 ? subwfont : subpfont,
+                                  ),
+                                  color: selectedtype == 1
+                                      ? maincolor
+                                      : Colors.white,
+                                  width: 100,
+                                  height: 40,
                                 ),
-                                width: 100,
-                                height: 40,
                               )
                             ],
                           ),
@@ -153,17 +235,8 @@ class Signup extends StatelessWidget {
                             height: 20,
                           ),
                           RecButton(
-                            fun: () {
-                             if(fkey.currentState!.validate()){
-                               Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return Home();
-                                    },
-                                  ),
-                                );
-                             }
-                            },
+                            color: maincolor,
+                            fun: singUp,
                             height: 50,
                             width: MediaQuery.of(context).size.width,
                             label: Text(

@@ -7,12 +7,14 @@ class RecButton extends StatefulWidget {
   final Widget label;
   final double width;
   final double height;
+  final color;
   void Function()? fun;
 
   RecButton(
       {required this.label,
       required this.width,
       required this.height,
+      required this.color,
       this.fun});
   @override
   State<RecButton> createState() => _RecButtonState();
@@ -29,8 +31,10 @@ class _RecButtonState extends State<RecButton> {
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 4),
         decoration: BoxDecoration(
-          color: maincolor,
+          border: Border.all(color: maincolor),
+          color: widget.color,
           borderRadius: BorderRadius.circular(subborder),
+          
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

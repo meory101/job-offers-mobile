@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 
 class CProfileInfo extends StatefulWidget {
@@ -52,6 +53,8 @@ class _CProfileInfoState extends State<CProfileInfo> {
                 ),
              
                 RecButton(
+                                color: maincolor,
+
                     label: Text(
                       'Location',
                       style: subwfont,
@@ -62,6 +65,8 @@ class _CProfileInfoState extends State<CProfileInfo> {
                   height: 10,
                 ),
                 RecButton(
+                                color: maincolor,
+
                     label: Text(
                       'Save',
                       style: subwfont,

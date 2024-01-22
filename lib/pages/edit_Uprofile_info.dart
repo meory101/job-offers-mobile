@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 
 class ProfileInfo extends StatefulWidget {
@@ -59,6 +60,8 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   height: 30,
                 ),
                 RecButton(
+                                color: maincolor,
+
                     label: Text(
                       'New resume',
                       style: subwfont,
@@ -69,6 +72,8 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   height: 10,
                 ),
                 RecButton(
+                                color: maincolor,
+
                     label: Text(
                       'Save',
                       style: subwfont,

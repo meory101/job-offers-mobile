@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 
 class EditExp extends StatefulWidget {
@@ -69,6 +70,8 @@ class _EditExpState extends State<EditExp> {
                   ),
                   InkWell(
                       child: RecButton(
+                                color: maincolor,
+
                           label: Text(
                             "Tab to Update",
                             style: subwfont,

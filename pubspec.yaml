@@ -38,7 +38,9 @@ dependencies:
   hexcolor: ^3.0.1
   flutter_svg: ^2.0.9
   focused_menu: ^1.0.5
-  
+  shared_preferences: ^2.2.2
+  awesome_dialog: ^3.2.0
+  http: 
 dev_dependencies:
   flutter_test:
     sdk: flutter
