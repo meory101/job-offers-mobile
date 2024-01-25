@@ -1,12 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/db/links.dart';
+import 'package:kml/db/post_with_file.dart';
+import 'package:kml/pages/home.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
 class ProfileInfo extends StatefulWidget {
-  const ProfileInfo({super.key});
-
+  String grad;
+  String work;
+  ProfileInfo({required this.grad, required this.work});
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
 }
@@ -14,7 +25,56 @@ class ProfileInfo extends StatefulWidget {
 class _ProfileInfoState extends State<ProfileInfo> {
   TextEditingController grad = TextEditingController();
   TextEditingController work = TextEditingController();
+  File? file;
+  SelectCv() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
 
+    if (result != null) {
+      file = File(result.files.single.path!);
+    }
+  }
+
+  UpdateUserProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map data = {
+      'graduated_at': '${grad.text}',
+      'worked_at': '${work.text}',
+      'user_id': '${prefs.getString('user_id')}',
+      'id': '${prefs.getString('profile_id')}'
+    };
+    var body;
+    if (file != null) {
+      body =
+          await postWithMultiFile(update_user_profile, data, [file!], ['cv']);
+    } else {
+      http.Response responce = await http.post(
+        Uri.parse(update_user_profile),
+        body: data,
+      );
+      body = jsonDecode(responce.body);
+    }
+    print(body);
+    if (body['status'] == 'success') {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) {
+          return Home();
+        },
+      ));
+    }
+  }
+
+  @override
+  void initState() {
+    if (widget.grad != null) {
+      grad.text = widget.grad;
+    }
+    if (widget.work != null) {
+      work.text = widget.work;
+    }
+    super.initState();
+  }
+
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,10 +93,10 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   'Edit Profile Information!',
                   style: lmain,
                 ),
-                  SizedBox(
+                SizedBox(
                   height: 10,
                 ),
-                 Text(
+                Text(
                   'Edit university name ,last job and resume .People who visits your profile can see this information.',
                   style: greyfont,
                 ),
@@ -60,10 +120,10 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   height: 30,
                 ),
                 RecButton(
-                                color: maincolor,
-
+                    fun: SelectCv,
+                    color: maincolor,
                     label: Text(
-                      'New resume',
+                      'New cv',
                       style: subwfont,
                     ),
                     width: MediaQuery.of(context).size.width - 30,
@@ -72,8 +132,8 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   height: 10,
                 ),
                 RecButton(
-                                color: maincolor,
-
+                    fun: UpdateUserProfile,
+                    color: maincolor,
                     label: Text(
                       'Save',
                       style: subwfont,

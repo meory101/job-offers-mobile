@@ -1,4 +1,9 @@
 String server_link = 'http://192.168.129.164:8001';
-String usignup = server_link +'/api/'+ 'USignUp';
+String image_root = server_link + '/storage/';
+String usignup = server_link + '/api/' + 'USignUp';
 String csignup = server_link + '/api/' + 'CSignUp';
-String signin = server_link + '/api/' + 'USignIn'; 
+String signin = server_link + '/api/' + 'USignIn';
+String userprofile = server_link + '/api/' + 'getUProfile';
+String update_user_profile = server_link + '/api/' + 'UpdateUProfile';
+String userexps = server_link + '/api/' + 'getExp';
+String deletexp = server_link + '/api/' + 'DeleteExp';

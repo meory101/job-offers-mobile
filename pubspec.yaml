@@ -41,6 +41,11 @@ dependencies:
   shared_preferences: ^2.2.2
   awesome_dialog: ^3.2.0
   http: 
+  file_picker: ^6.1.1
+  image_picker: 
+  open_file:
+  path_provider:
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

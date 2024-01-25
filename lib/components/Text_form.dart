@@ -4,6 +4,7 @@ import 'package:kml/theme/fonts.dart';
 
 class Textform extends StatelessWidget {
   const Textform(
+
       {super.key,
       required this.controller,
       required this.text,
@@ -29,6 +30,7 @@ class Textform extends StatelessWidget {
             BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 7)
           ]),
       child: TextFormField(
+       
         validator:val,
         style: subbfont,
         cursorColor: maincolor,
