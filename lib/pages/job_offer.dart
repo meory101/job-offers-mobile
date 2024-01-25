@@ -1,21 +1,32 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kml/components/circular_button.dart';
 import 'package:kml/components/comments.dart';
+import 'package:kml/components/job_offer.dart';
 import 'package:kml/components/profile_tag.dart';
+import 'package:kml/db/links.dart';
 import 'package:kml/pages/Com_profile.dart';
 import 'package:kml/pages/show_emp_profile.dart';
 import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
+import 'package:http/http.dart' as http;
 
 class JobOfferDet extends StatefulWidget {
-  const JobOfferDet({super.key});
-
+  var data;
+  JobOfferDet({required this.data});
   @override
   State<JobOfferDet> createState() => _JobOfferDetState();
 }
 
 class _JobOfferDetState extends State<JobOfferDet> {
+  @override
+  void initState() {
+   
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,15 +64,16 @@ class _JobOfferDetState extends State<JobOfferDet> {
                                 ));
                               },
                               child: ProfileTag(
-                                image: AssetImage("assets/images/g1.jpg"),
+                                image: NetworkImage(image_root+
+                                    "${widget.data['com_profile']['image_url']}"),
                                 name: Text(
-                                  " Company name",
+                                  " ${widget.data['com_name']['name']}",
                                   style: subbfont,
                                 ),
                               ),
                             ),
                             Text(
-                              "5 June 2020",
+                              "${widget.data['offers']['date']}",
                               style: greyfont,
                             )
                           ],
@@ -76,7 +88,8 @@ class _JobOfferDetState extends State<JobOfferDet> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(mainborder),
                     image: DecorationImage(
-                      image: AssetImage("assets/images/g2.jpg"),
+                      image: NetworkImage(image_root+
+                                    "${widget.data['offers']['image_url']}"),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -84,7 +97,7 @@ class _JobOfferDetState extends State<JobOfferDet> {
                 Container(
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
-                    "Select your level from A1 English level to C1 English level Reading practice to help you understand long, complex texts about a wide variety.",
+                    " ${widget.data['offers']['content']}",
                     style: subbfont,
                   ),
                 ),
@@ -94,11 +107,14 @@ class _JobOfferDetState extends State<JobOfferDet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "#Jobname",
+                        "#${widget.data['offers']['hashtag']}",
                         style: bluefont,
                       ),
                       CircularButton(
-                        icon: Icon(Icons.send_rounded,color: Colors.white,),
+                        icon: Icon(
+                          Icons.send_rounded,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -112,7 +128,9 @@ class _JobOfferDetState extends State<JobOfferDet> {
                     margin: EdgeInsets.only(top: 20, bottom: 0),
                     height: MediaQuery.of(context).size.height / 2.5,
                     width: MediaQuery.of(context).size.width,
-                    child: CommentsSection()),
+                    child: CommentsSection(
+                      offerid: "${widget.data['offers']['id']}",
+                    )),
               ],
             ),
           ),

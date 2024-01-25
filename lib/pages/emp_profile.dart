@@ -14,6 +14,7 @@ import 'package:kml/components/rectangular_button.dart';
 import 'package:kml/db/links.dart';
 import 'package:kml/db/load_file.dart';
 import 'package:kml/db/post_with_file.dart';
+import 'package:kml/pages/Login.dart';
 import 'package:kml/pages/create_experience.dart';
 import 'package:kml/pages/create_job_opportunity.dart';
 import 'package:kml/pages/edit_experience.dart';
@@ -24,7 +25,7 @@ import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:open_file/open_file.dart';
+import 'package:open_app_file/open_app_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EmpProfile extends StatefulWidget {
@@ -93,7 +94,10 @@ class _EmpProfileState extends State<EmpProfile> {
     print('ffffffff');
     if ('${profile_info['cv_url']}' != null) {
       path1 = await loadPDF(image_root + '${profile_info['cv_url']}');
-      setState(() {});
+      print(path1! + '`11');
+    }
+    if (path1 != null) {
+      await OpenAppFile.open(path1!);
     }
   }
 
@@ -155,10 +159,7 @@ class _EmpProfileState extends State<EmpProfile> {
             ),
             InkWell(
               onTap: () async {
-                getPath();
-                print('jeeeeeeeeeeeeeeeeeeeeeeee');
-                print(path1);
-                path1 != null ? await OpenFile.open(path1) : null;
+                await getPath();
               },
               child: ListTile(
                 leading: Icon(
@@ -167,20 +168,53 @@ class _EmpProfileState extends State<EmpProfile> {
                   size: 20,
                 ),
                 title: Text(
-                  "My cv",
+                  'My cv',
                   style: subbfont,
                 ),
               ),
             ),
-            ListTile(
-              leading: Icon(
-                Icons.logout,
-                color: maincolor,
-                size: 20,
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return NewExp();
+                    },
+                  ),
+                );
+              },
+              child: ListTile(
+                leading: Icon(
+                  CupertinoIcons.bookmark,
+                  color: maincolor,
+                  size: 20,
+                ),
+                title: Text(
+                  'New Experience',
+                  style: subbfont,
+                ),
               ),
-              title: Text(
-                "Logout",
-                style: subbfont,
+            ),
+            InkWell(
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.clear();
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                  builder: (context) {
+                    return Loginpage();
+                  },
+                ), (route) => false);
+              },
+              child: ListTile(
+                leading: Icon(
+                  Icons.logout,
+                  color: maincolor,
+                  size: 20,
+                ),
+                title: Text(
+                  "Logout",
+                  style: subbfont,
+                ),
               ),
             ),
           ],

@@ -8,7 +8,9 @@ import 'package:kml/components/rectangular_button.dart';
 import 'package:kml/components/text_form.dart';
 import 'package:kml/db/links.dart';
 import 'package:kml/pages/Login.dart';
+import 'package:kml/pages/companyinfo.dart';
 import 'package:kml/pages/home.dart';
+import 'package:kml/pages/userinfo.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +47,7 @@ class _SignUpState extends State<SignUp> {
           };
           http.Response response = await http.post(url, body: body);
           body = jsonDecode(response.body);
+          print(body);
           if (body['status'] == 'success') {
             selectedtype == 0
                 ? prefs.setString('user_id', body['userid'])
@@ -53,20 +56,20 @@ class _SignUpState extends State<SignUp> {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) {
-                  return const Home();
+                  return selectedtype == 0 ? userinfo():companyinfo();
                 },
               ),
             );
           } else {
-          return  AwesomeDialog(
+            return AwesomeDialog(
               context: context,
               dialogType: DialogType.error,
               animType: AnimType.rightSlide,
               title: 'Error',
-              desc: 'Something went wrong please try again later.',
+              desc: '${body['message']}',
               btnCancelOnPress: () {},
               btnOkOnPress: () {},
-              )..show();
+            )..show();
           }
         } catch (e) {}
       }
@@ -128,14 +131,12 @@ class _SignUpState extends State<SignUp> {
                     Textform(
                       val: (p0) {
                         if (p0!.isNotEmpty) {
-
                           if (!RegExp(
                                   r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                               .hasMatch(p0)) {
                             return 'Email format is wrong';
                           }
                         } else {
-
                           return 'Email can\'t be empty';
                         }
                         return null;
@@ -189,7 +190,6 @@ class _SignUpState extends State<SignUp> {
                             children: [
                               InkWell(
                                 onTap: () {
-
                                   setState(() {
                                     selectedtype = 0;
                                   });

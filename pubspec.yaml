@@ -43,8 +43,8 @@ dependencies:
   http: 
   file_picker: ^6.1.1
   image_picker: 
-  open_file:
   path_provider:
+  open_app_file: 
   
 dev_dependencies:
   flutter_test:

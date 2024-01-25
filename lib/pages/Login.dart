@@ -32,7 +32,7 @@ class Loginpage extends StatelessWidget {
           };
           http.Response response = await http.post(url, body: body);
           body = jsonDecode(response.body);
-
+          print(body);
           if (body['status'] == 'success') {
             print('dkdk');
             body['userid'] != null
@@ -47,14 +47,13 @@ class Loginpage extends StatelessWidget {
               ),
             );
           } else {
-          return  AwesomeDialog(
+            return AwesomeDialog(
               context: context,
               dialogType: DialogType.error,
               animType: AnimType.rightSlide,
               title: 'Error',
-              desc: 'Something went wrong please try again later.',
-          
-              )..show();
+              desc: '${body['message']}',
+            )..show();
           }
         } catch (e) {}
       }

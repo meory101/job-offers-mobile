@@ -21,6 +21,7 @@ class _JobOfferState extends State<JobOffer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.topLeft,
       width: double.infinity,
       margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
       decoration: BoxDecoration(
@@ -29,6 +30,7 @@ class _JobOfferState extends State<JobOffer> {
         border: Border.all(color: bordercolor),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: EdgeInsets.only(left: 10),

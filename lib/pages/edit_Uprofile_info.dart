@@ -17,17 +17,21 @@ import 'dart:io';
 class ProfileInfo extends StatefulWidget {
   String grad;
   String work;
+
   ProfileInfo({required this.grad, required this.work});
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
 }
 
 class _ProfileInfoState extends State<ProfileInfo> {
+  GlobalKey<FormState> fkey = new GlobalKey();
+
   TextEditingController grad = TextEditingController();
   TextEditingController work = TextEditingController();
   File? file;
   SelectCv() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: false);
 
     if (result != null) {
       file = File(result.files.single.path!);
@@ -43,24 +47,26 @@ class _ProfileInfoState extends State<ProfileInfo> {
       'id': '${prefs.getString('profile_id')}'
     };
     var body;
-    if (file != null) {
+    if (file != null && fkey.currentState!.validate()) {
       body =
           await postWithMultiFile(update_user_profile, data, [file!], ['cv']);
-    } else {
+    } else if (file == null && fkey.currentState!.validate()) {
       http.Response responce = await http.post(
         Uri.parse(update_user_profile),
         body: data,
       );
       body = jsonDecode(responce.body);
     }
-    print(body);
-    if (body['status'] == 'success') {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) {
-          return Home();
-        },
-      ));
-    }
+   if(body!=null){
+     print(body);
+      if (body['status'] == 'success') {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) {
+            return Home();
+          },
+        ));
+      }
+   }
   }
 
   @override
@@ -82,65 +88,89 @@ class _ProfileInfoState extends State<ProfileInfo> {
         child: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Edit Profile Information!',
-                  style: lmain,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Edit university name ,last job and resume .People who visits your profile can see this information.',
-                  style: greyfont,
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Textform(
-                    controller: grad,
-                    text: 'Graduated From',
-                    textInputType: TextInputType.text,
-                    obscure: false),
-                SizedBox(
-                  height: 20,
-                ),
-                Textform(
-                    controller: work,
-                    text: 'Worked At',
-                    textInputType: TextInputType.text,
-                    obscure: false),
-                SizedBox(
-                  height: 30,
-                ),
-                RecButton(
-                    fun: SelectCv,
-                    color: maincolor,
-                    label: Text(
-                      'New cv',
-                      style: subwfont,
-                    ),
-                    width: MediaQuery.of(context).size.width - 30,
-                    height: 50),
-                SizedBox(
-                  height: 10,
-                ),
-                RecButton(
-                    fun: UpdateUserProfile,
-                    color: maincolor,
-                    label: Text(
-                      'Save',
-                      style: subwfont,
-                    ),
-                    width: MediaQuery.of(context).size.width - 30,
-                    height: 50)
-              ],
+            child: Form(
+              key: fkey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Edit Profile Information!',
+                    style: lmain,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Edit university name ,last job and resume .People who visits your profile can see this information.',
+                    style: greyfont,
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Textform(
+                      val: (p0) {
+                        print(grad.text);
+                        if (grad.text.isNotEmpty) {
+                          if (grad.text.length > 20) {
+                            return 'too long';
+                          } 
+                        }
+                        else {
+                          return 'required';
+                        }
+                      },
+                      controller: grad,
+                      text: 'Graduated From',
+                      textInputType: TextInputType.text,
+                      obscure: false),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Textform(
+                      val: (p0) {
+                        if (work.text.isNotEmpty) {
+                          if (work.text.length > 20) {
+                            return 'too long';
+                          }
+                        }
+                         else {
+                          return 'required';
+                        }
+                      },
+                      controller: work,
+                      text: 'Worked At',
+                      textInputType: TextInputType.text,
+                      obscure: false),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  RecButton(
+                      fun: SelectCv,
+                      color: maincolor,
+                      label: Text(
+                        'New cv',
+                        style: subwfont,
+                      ),
+                      width: MediaQuery.of(context).size.width - 30,
+                      height: 50),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  RecButton(
+                      fun: UpdateUserProfile,
+                      color: maincolor,
+                      label: Text(
+                        'Save',
+                        style: subwfont,
+                      ),
+                      width: MediaQuery.of(context).size.width - 30,
+                      height: 50)
+                ],
+              ),
             ),
           ),
         ),
