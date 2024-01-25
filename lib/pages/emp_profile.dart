@@ -380,7 +380,11 @@ class _EmpProfileState extends State<EmpProfile> {
                                           onPressed: () {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) => ShowExp(),
+                                                builder: (context) {
+                                                  return ShowExp(
+                                                      exp:
+                                                          snapshot.data[index]);
+                                                },
                                               ),
                                             );
                                           }),
@@ -393,7 +397,9 @@ class _EmpProfileState extends State<EmpProfile> {
                                           onPressed: () {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) => NewExp(),
+                                                builder: (context) {
+                                                  return NewExp();
+                                                },
                                               ),
                                             );
                                           }),
@@ -406,7 +412,11 @@ class _EmpProfileState extends State<EmpProfile> {
                                           onPressed: () {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) => EditExp(),
+                                                builder: (context) {
+                                                  return EditExp(
+                                                      exp:
+                                                          snapshot.data[index]);
+                                                },
                                               ),
                                             );
                                           }),

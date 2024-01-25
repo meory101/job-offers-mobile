@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kml/db/links.dart';
 import 'package:kml/theme/fonts.dart';
 
 class ShowExp extends StatefulWidget {
-  const ShowExp({super.key});
+  var exp;
+  ShowExp({required this.exp});
 
   @override
   State<ShowExp> createState() => _ShowExpState();
@@ -12,19 +14,25 @@ class _ShowExpState extends State<ShowExp> {
   int selectedindex = 0;
   bool clickedlike = false;
   @override
+  void initState() {
+    print(widget.exp);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
         child: Stack(
           children: [
-            Container(
+           widget.exp ==null?Center(child: CircularProgressIndicator()): Container(
               alignment: Alignment.topRight,
               padding: EdgeInsets.only(right: 10, top: 10),
               height: MediaQuery.of(context).size.height / 2.5,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/images/ff.jpg'),
+                    image: NetworkImage(image_root+'${widget.exp['image_url']}'),
                     fit: BoxFit.cover),
               ),
             ),
@@ -47,24 +55,24 @@ class _ShowExpState extends State<ShowExp> {
                     height: 30,
                   ),
                   Text(
-                    'Flutter Development',
+                     '${widget.exp['title']}',
                     style: lmain,
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Text(
-                    "Select your level from A1 English level to C1 English level Reading practice to help you understand long, complex texts about a wide variety Select your level from A1 English level to C1 English level Reading practice to help you understand long, complex texts about a wide variety.",
+                    '${widget.exp['content']}',
                     style: greyfont,
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Text(
-                    ' 5 years Experience',
+                    '${widget.exp['years']}',
                     style: submain,
                   ),
-                   SizedBox(
+                  SizedBox(
                     height: 30,
                   ),
                 ],

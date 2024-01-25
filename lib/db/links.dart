@@ -7,3 +7,5 @@ String userprofile = server_link + '/api/' + 'getUProfile';
 String update_user_profile = server_link + '/api/' + 'UpdateUProfile';
 String userexps = server_link + '/api/' + 'getExp';
 String deletexp = server_link + '/api/' + 'DeleteExp';
+String newexp = server_link + '/api/' + 'CreateExp';
+String editexp = server_link + '/api/' + 'UpdateExp';

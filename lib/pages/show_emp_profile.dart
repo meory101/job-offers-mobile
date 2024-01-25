@@ -163,11 +163,11 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                                       color: maincolor,
                                     ),
                                     onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => ShowExp(),
-                                        ),
-                                      );
+                                      // Navigator.of(context).push(
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => ShowExp(),
+                                      //   ),
+                                      // );
                                     }),
                              
                               ],
