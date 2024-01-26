@@ -42,7 +42,7 @@ class _NewExpState extends State<NewExp> {
         if (body['status'] == 'success') {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) {
-              return Home();
+              return Home(type: 'user',);
             },
           ));
         }

@@ -5,6 +5,8 @@ import 'package:kml/components/filter.dart';
 import 'package:kml/components/job_offer.dart';
 import 'package:kml/components/profile_tag.dart';
 import 'package:kml/components/search.dart';
+import 'package:kml/db/links.dart';
+import 'package:kml/pages/Com_profile.dart';
 import 'package:kml/pages/emp_profile.dart';
 import 'package:kml/pages/home_content.dart';
 import 'package:kml/pages/inbox.dart';
@@ -14,7 +16,8 @@ import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  String? type;
+  Home({ this.type});
 
   @override
   State<Home> createState() => _HomeState();
@@ -41,7 +44,7 @@ class _HomeState extends State<Home> {
               items: [
                 FlashyTabBarItem(
                   icon: Icon(
-                  CupertinoIcons.person,
+                    CupertinoIcons.person,
                     color: maincolor,
                   ),
                   title: Text(
@@ -51,7 +54,7 @@ class _HomeState extends State<Home> {
                 ),
                 FlashyTabBarItem(
                   icon: Icon(
-                   CupertinoIcons.cube_box,
+                    CupertinoIcons.cube_box,
                     color: maincolor,
                   ),
                   title: Text('Home', style: submain),
@@ -69,8 +72,9 @@ class _HomeState extends State<Home> {
         ),
         body: _selectedIndex == 1
             ? HomeContent()
-            : _selectedIndex == 0
-                ? EmpProfile()
+            : _selectedIndex == 0 ? widget.type == "user"?
+                 EmpProfile()
+                 :Comprofile()
                 : Inbox(),
       ),
     );

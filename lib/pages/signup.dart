@@ -36,6 +36,8 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     singUp() async {
+      print("ssssssssssssssssssss");
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (fkey.currentState!.validate()) {
         try {
@@ -53,10 +55,11 @@ class _SignUpState extends State<SignUp> {
                 ? prefs.setString('user_id', body['userid'])
                 : prefs.setString('com_id', body['comid']);
             prefs.setString('token', body['token']);
+            print(prefs.getString('com_id'));
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) {
-                  return selectedtype == 0 ? userinfo():companyinfo();
+                  return selectedtype == 0 ? userinfo() : companyinfo();
                 },
               ),
             );
@@ -71,7 +74,9 @@ class _SignUpState extends State<SignUp> {
               btnOkOnPress: () {},
             )..show();
           }
-        } catch (e) {}
+        } catch (e) {
+          print(e);
+        }
       }
     }
 

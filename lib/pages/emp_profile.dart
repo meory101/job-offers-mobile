@@ -94,9 +94,9 @@ class _EmpProfileState extends State<EmpProfile> {
     print('ffffffff');
     if ('${profile_info['cv_url']}' != null) {
       path1 = await loadPDF(image_root + '${profile_info['cv_url']}');
-      print(path1! + '`11');
+      print(path1! +'`11');
     }
-    if (path1 != null) {
+    if(path1!=null){
       await OpenAppFile.open(path1!);
     }
   }
@@ -173,15 +173,16 @@ class _EmpProfileState extends State<EmpProfile> {
                 ),
               ),
             ),
+            
             InkWell(
-              onTap: () {
+              onTap: ()  {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return NewExp();
-                    },
-                  ),
-                );
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return NewExp();
+                                                },
+                                              ),
+                                            );
               },
               child: ListTile(
                 leading: Icon(
@@ -195,6 +196,7 @@ class _EmpProfileState extends State<EmpProfile> {
                 ),
               ),
             ),
+             
             InkWell(
               onTap: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();

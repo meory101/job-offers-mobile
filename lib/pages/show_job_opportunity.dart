@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kml/theme/fonts.dart';
 
 class ShowOpp extends StatefulWidget {
-  const ShowOpp({super.key});
+  var offer;
+  ShowOpp({required this.offer});
 
   @override
   State<ShowOpp> createState() => _ShowOppState();

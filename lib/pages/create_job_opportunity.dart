@@ -1,19 +1,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
+import 'package:kml/db/links.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 
 class Create_new extends StatefulWidget {
-  Create_new({super.key});
-
   @override
   State<Create_new> createState() => _Create_newState();
 }
 
 class _Create_newState extends State<Create_new> {
+  File? image;
   final TextEditingController name = TextEditingController();
   final TextEditingController name1 = TextEditingController();
   final TextEditingController name2 = TextEditingController();
@@ -29,16 +30,29 @@ class _Create_newState extends State<Create_new> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height/3,
-                          child: Icon(Icons.image),
-                        )
-                      ],
+                  InkWell(
+                    onTap: () async {
+                      var res = await ImagePicker.platform
+                          .getImageFromSource(source: ImageSource.gallery);
+                      if (res != null) {
+                        image = File(res.path);
+                        setState(() {});
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: image != null
+                                ? Image.file(image!)
+                                : Icon(Icons.image),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -62,8 +76,7 @@ class _Create_newState extends State<Create_new> {
                   ),
                   InkWell(
                       child: RecButton(
-                                color: maincolor,
-
+                          color: maincolor,
                           label: Text(
                             "Tab to Add",
                             style: subwfont,

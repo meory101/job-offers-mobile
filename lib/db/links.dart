@@ -1,4 +1,4 @@
-String server_link = 'http://192.168.129.164:8001';
+String server_link = 'http://192.168.148.164:8001';
 String image_root = server_link + '/storage/';
 String usignup = server_link + '/api/' + 'USignUp';
 String csignup = server_link + '/api/' + 'CSignUp';
@@ -15,3 +15,8 @@ String comprofile = server_link + '/api/' + 'getCProfile';
 String getoffers = server_link + '/api/' + 'getAllOffers';
 String getComments = server_link + '/api/' + 'getComments';
 String addcomment = server_link + '/api/' + 'addComment';
+String getOffer = server_link + '/api/' + 'getOffer';
+String update_comp_profile = server_link + '/api/' + 'UpdateCProfile';
+String editoffers = server_link + '/api/' + 'UpdateCProfile';
+
+
