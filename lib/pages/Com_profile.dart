@@ -30,6 +30,7 @@ class Comprofile extends StatefulWidget {
 class _ComprofileState extends State<Comprofile> {
   GlobalKey<ScaffoldState> skey = new GlobalKey();
   var profile_info;
+  var offer;
 
   GetComProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -61,7 +62,19 @@ class _ComprofileState extends State<Comprofile> {
     return null;
   }
 
-  Deleteoffer(id) {}
+  Deleteoffer(id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(id);
+    http.Response response =
+        await http.post(Uri.parse(deletoffer), body: {'id': '${id}'});
+    var body = jsonDecode(response.body);
+    print(body);
+    if (body['status'] == 'success') {
+      GetComoffer();
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     GetComProfile();
@@ -386,7 +399,7 @@ class _ComprofileState extends State<Comprofile> {
                                                   )),
                                             ),
                                             Text(
-                                              '${snapshot.data[index]['title']}',
+                                              '${snapshot.data[index]['hashtag']}',
                                               style: subbfont,
                                             )
                                           ],

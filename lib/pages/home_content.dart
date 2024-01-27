@@ -32,11 +32,13 @@ class _HomeContentState extends State<HomeContent> {
     String url = user_id != null
         ? userprofile + '/${user_id}'
         : comprofile + '/${com_id}';
+
     http.Response response = await http.get(Uri.parse(url));
 
     var body = jsonDecode(response.body);
     if (body['status'] == 'success') {
       profile_info = body['message'];
+
       setState(() {});
     }
   }
@@ -70,31 +72,36 @@ class _HomeContentState extends State<HomeContent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            profile_info==null?
-            Container(
-                margin: EdgeInsets.only(top: 30),
-                child: ProfileTag(
-                  image:
-                  AssetImage('assets/images/user.png'),
-                  name:profile_info!=null? Text(
-                    " ${profile_info['user']['name']}",
-                    style: titleb,
-                  ):Text(''),
-                  radius: 30,
-                ),
-              ):
-              Container(
-                margin: EdgeInsets.only(top: 30),
-                child: ProfileTag(
-                  image:
-                  NetworkImage(image_root + '${profile_info['image_url']}'),
-                  name: Text(
-                    " ${profile_info['user']['name']}",
-                    style: titleb,
-                  ),
-                  radius: 30,
-                ),
-              ),
+              profile_info == null
+                  ? Container(
+                      margin: EdgeInsets.only(top: 30),
+                      child: ProfileTag(
+                        image: AssetImage('assets/images/user.png'),
+                        name: profile_info != null
+                            ? Text(
+                                user_id != null
+                                    ? " ${profile_info['user']['name']}"
+                                    : " ${profile_info['company']['name']}",
+                                style: titleb,
+                              )
+                            : Text(''),
+                        radius: 30,
+                      ),
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(top: 30),
+                      child: ProfileTag(
+                        image: NetworkImage(
+                            image_root + '${profile_info['image_url']}'),
+                        name: Text(
+                          user_id != null
+                              ? " ${profile_info['user']['name']}"
+                              : " ${profile_info['company']['name']}",
+                          style: titleb,
+                        ),
+                        radius: 30,
+                      ),
+                    ),
               Padding(
                 padding: const EdgeInsets.only(right: 20, top: 9),
                 child: Text(
@@ -118,26 +125,29 @@ class _HomeContentState extends State<HomeContent> {
                     itemBuilder: (context, index) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) {
-                                  return JobOfferDet(data: snapshot.data[index],);
+                                  return JobOfferDet(
+                                    data: snapshot.data[index],
+                                  );
                                 },
                               ));
                             },
                             child: JobOffer(
                               location:
-                                  "${snapshot.data[index]['com_profile']['location']}",
+                                  "${snapshot.data[index]['offers']['cprofile']['location']}",
                               image: NetworkImage(
                                 image_root +
                                     "${snapshot.data[index]['offers']['image_url']}",
                               ),
                               content:
-                               "${snapshot.data[index]['offers']['content']}",
-                              tag: "#${snapshot.data[index]['offers']['hashtag']}",
+                                  "${snapshot.data[index]['offers']['content']}",
+                              tag:
+                                  "#${snapshot.data[index]['offers']['hashtag']}",
                             ),
                           ),
                           Padding(
@@ -156,9 +166,12 @@ class _HomeContentState extends State<HomeContent> {
                                     ));
                                   },
                                   child: ProfileTag(
-                                    image: AssetImage("assets/images/g1.jpg"),
+                                    image: NetworkImage(
+                                      image_root +
+                                          "${snapshot.data[index]['offers']['cprofile']['image_url']}",
+                                    ),
                                     name: Text(
-                                      " ${snapshot.data[index]['com_name']['name']}",
+                                      " ${snapshot.data[index]['offers']['cprofile']['company']['name']}",
                                       style: subbfont,
                                     ),
                                   ),

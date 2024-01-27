@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kml/db/links.dart';
 import 'package:kml/theme/fonts.dart';
 
 class ShowOpp extends StatefulWidget {
@@ -17,16 +18,19 @@ class _ShowOppState extends State<ShowOpp> {
           child: SingleChildScrollView(
         child: Stack(
           children: [
-            Container(
-              alignment: Alignment.topRight,
-              padding: EdgeInsets.only(right: 10, top: 10),
-              height: MediaQuery.of(context).size.height / 2.5,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/images/ff.jpg'),
-                    fit: BoxFit.cover),
-              ),
-            ),
+            widget.offer == null
+                ? CircularProgressIndicator()
+                : Container(
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.only(right: 10, top: 10),
+                    height: MediaQuery.of(context).size.height / 2.5,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              image_root + '${widget.offer['image_url']}'),
+                          fit: BoxFit.cover),
+                    ),
+                  ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               width: double.infinity,
@@ -46,14 +50,14 @@ class _ShowOppState extends State<ShowOpp> {
                     height: 30,
                   ),
                   Text(
-                    "Select your level from A1 English level to C1 English level Reading practice to help you understand long, complex texts about a wide variety Select your level from A1 English level to C1 English level Reading practice to help you understand long, complex texts about a wide variety.",
+                    '${widget.offer['content']}',
                     style: greyfont,
                   ),
                   SizedBox(
                     height: 30,
                   ),
                   Text(
-                    '#Flutter Developer',
+                    '#${widget.offer['hashtag']}',
                     style: submain,
                   ),
                   SizedBox(

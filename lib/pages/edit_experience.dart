@@ -43,7 +43,7 @@ class _EditExpState extends State<EditExp> {
         if (body['status'] == 'success') {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) {
-              return Home();
+              return Home(type: 'user',);
             },
           ));
         }
@@ -55,7 +55,7 @@ class _EditExpState extends State<EditExp> {
         if (body['status'] == 'success') {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) {
-              return Home();
+              return Home(type: 'user',);
             },
           ));
         }

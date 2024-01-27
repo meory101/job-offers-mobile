@@ -17,7 +17,7 @@ import 'package:kml/theme/fonts.dart';
 
 class Home extends StatefulWidget {
   String? type;
-  Home({ this.type});
+  Home({required this.type});
 
   @override
   State<Home> createState() => _HomeState();

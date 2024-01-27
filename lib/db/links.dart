@@ -17,6 +17,9 @@ String getComments = server_link + '/api/' + 'getComments';
 String addcomment = server_link + '/api/' + 'addComment';
 String getOffer = server_link + '/api/' + 'getOffer';
 String update_comp_profile = server_link + '/api/' + 'UpdateCProfile';
-String editoffers = server_link + '/api/' + 'UpdateCProfile';
+String editoffers = server_link + '/api/' + 'UpdateOffer';
+String createoffers = server_link + '/api/' + 'CreateOffer';
+String deletoffer = server_link + '/api/' + 'DeleteOffer';
+
 
 

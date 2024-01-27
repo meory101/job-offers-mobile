@@ -65,9 +65,9 @@ class _JobOfferDetState extends State<JobOfferDet> {
                               },
                               child: ProfileTag(
                                 image: NetworkImage(image_root+
-                                    "${widget.data['com_profile']['image_url']}"),
+                                    "${widget.data['offers']['cprofile']['image_url']}"),
                                 name: Text(
-                                  " ${widget.data['com_name']['name']}",
+                                "${widget.data['offers']['cprofile']['company']['name']}",
                                   style: subbfont,
                                 ),
                               ),
