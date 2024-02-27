@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:kml/components/filter.dart';
 import 'package:kml/components/job_offer.dart';
@@ -9,6 +10,11 @@ import 'package:kml/components/search.dart';
 import 'package:kml/db/links.dart';
 import 'package:kml/pages/com_profile.dart';
 import 'package:kml/pages/job_offer.dart';
+import 'package:kml/pages/show_com_profile.dart';
+import 'package:kml/pages/map.dart';
+import 'package:kml/pages/show_map.dart';
+import 'package:kml/theme/borders.dart';
+import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -22,9 +28,56 @@ class HomeContent extends StatefulWidget {
 
 var profile_info;
 String? user_id;
+String? latlong;
 String? com_id;
+bool se = false;
+TextEditingController searchcon = new TextEditingController();
+var data = [];
+var offers;
+bool filter = false;
 
 class _HomeContentState extends State<HomeContent> {
+  FilterData() async {
+    setState(() {
+      filter = true;
+    });
+    data = [];
+    if (latlong != null) {
+      print('latttttttttttttt');
+      double lat = double.parse('${latlong!.split('*')[0]}');
+      double long = double.parse('${latlong!.split('*')[1]}');
+      if (search_res != null) {
+        for (int i = 0; i < search_res.length; i++) {
+          if (Geolocator.distanceBetween(
+                      lat,
+                      long,
+                      double.parse(search_res[i]['offers']['cprofile']['lat']),
+                      double.parse(
+                          search_res[i]['offers']['cprofile']['long'])) /
+                  1000.0 <=50
+              ) {
+            data.add(search_res[i]);
+            ;
+          }
+        }
+      } else {
+        print('else');
+        for (int i = 0; i < offers.length; i++) {
+          if (Geolocator.distanceBetween(
+                      lat,
+                      long,
+                      double.parse(offers[i]['offers']['cprofile']['lat']),
+                      double.parse(offers[i]['offers']['cprofile']['long'])) /
+                  1000.0 <=
+              50) {
+            data.add(offers[i]);
+          }
+        }
+      }
+    }
+    return data;
+  }
+
   GetProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     user_id = await prefs.getString('user_id');
@@ -43,6 +96,29 @@ class _HomeContentState extends State<HomeContent> {
     }
   }
 
+  var search_res;
+  SearchOffers() async {
+    if (searchcon.text.isNotEmpty) {
+      print('ddddddddddddd');
+      http.Response response =
+          await http.get(Uri.parse(search_offer + '/${searchcon.text}'));
+      print(search_offer + '/${searchcon.text}');
+      var body = jsonDecode(response.body);
+      if (body['status'] == 'success') {
+        // setState(() {
+        search_res = body['message'];
+        // });
+        return body['message'];
+      }
+      return null;
+    } else {
+      setState(() {
+        se = false;
+      });
+    }
+    // searchcon.clear();
+  }
+
   GetOffers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String url = getoffers;
@@ -52,6 +128,7 @@ class _HomeContentState extends State<HomeContent> {
     var body = jsonDecode(response.body);
     print(body);
     if (body['status'] == 'success') {
+      offers = body['message'];
       return body['message'];
     }
     return null;
@@ -111,13 +188,106 @@ class _HomeContentState extends State<HomeContent> {
               )
             ],
           ),
-          Search(),
-          Filter(),
+          Container(
+            alignment: Alignment.center,
+            width: double.infinity - 40,
+            height: 40,
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(mainborder),
+                color: palemain),
+            child: TextFormField(
+              controller: searchcon,
+              style: subbfont,
+              cursorColor: maincolor,
+              decoration: InputDecoration(
+                hintText: " Search",
+                hintStyle: subbfont,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    se = true;
+                    SearchOffers();
+                    setState(() {});
+                  },
+                  icon: Icon(
+                    Icons.search,
+                    color: maincolor,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: double.infinity - 40,
+            height: 40,
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(mainborder),
+                color: palemain),
+            child: InkWell(
+              onTap: () async {
+                latlong = await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return Map();
+                  },
+                ));
+                print(latlong);
+                FilterData();
+              },
+              child: TextFormField(
+                enabled: false,
+                style: subbfont,
+                cursorColor: maincolor,
+                decoration: InputDecoration(
+                  hintText: " Filter by",
+                  hintStyle: subbfont,
+                  suffixIcon: IconButton(
+                    onPressed: () async {},
+                    icon: Icon(
+                      Icons.filter_alt_outlined,
+                      color: maincolor,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Container(
             alignment: Alignment.topLeft,
             height: MediaQuery.of(context).size.height / 1.5,
             child: FutureBuilder(
-              future: GetOffers(),
+              future: filter
+                  ? FilterData()
+                  : se
+                      ? SearchOffers()
+                      : GetOffers(),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
@@ -138,8 +308,18 @@ class _HomeContentState extends State<HomeContent> {
                               ));
                             },
                             child: JobOffer(
-                              location:
-                                  "${snapshot.data[index]['offers']['cprofile']['location']}",
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return showMap(
+                                        lat:
+                                            "${snapshot.data[index]['offers']['cprofile']['lat']}",
+                                        long:
+                                            "${snapshot.data[index]['offers']['cprofile']['long']}");
+                                  },
+                                ));
+                              },
+                              location: "Location",
                               image: NetworkImage(
                                 image_root +
                                     "${snapshot.data[index]['offers']['image_url']}",
@@ -161,7 +341,12 @@ class _HomeContentState extends State<HomeContent> {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                       builder: (context) {
-                                        return Comprofile();
+                                        return ShowComProfile(
+                                          profile_id:
+                                              "${snapshot.data[index]['offers']['cprofile']['id']}",
+                                          com_id:
+                                              "${snapshot.data[index]['offers']['cprofile']['company_id']}",
+                                        );
                                       },
                                     ));
                                   },

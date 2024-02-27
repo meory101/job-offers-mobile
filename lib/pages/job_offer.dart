@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:kml/components/circular_button.dart';
 import 'package:kml/components/comments.dart';
@@ -11,6 +12,7 @@ import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JobOfferDet extends StatefulWidget {
   var data;
@@ -22,10 +24,56 @@ class JobOfferDet extends StatefulWidget {
 class _JobOfferDetState extends State<JobOfferDet> {
   @override
   void initState() {
-   
+    checkType();
     super.initState();
   }
 
+  String? type;
+  checkType() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    type = prefs.getString('user_id') != null ? 'user' : 'comp';
+    setState(() {
+      
+    });
+    print(type);
+  }
+
+  sendcv(id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    http.Response response = await http.get(
+        Uri.parse(checkSendCv + '/${prefs.getString('user_id')}' + '/${id}'));
+    var body = jsonDecode(response.body);
+    if (body['message'] == 'sended') {
+      return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        title: 'Error',
+        desc: 'cv is already sended',
+        btnCancelOnPress: () {},
+        btnOkOnPress: () {},
+      )..show();
+    } else {
+      var data = {
+        'user_id': '${prefs.getString('user_id')}',
+        'offer_id': '$id'
+      };
+      print(data);
+      http.Response response = await http.post(Uri.parse(addDeal), body: data);
+      var body = jsonDecode(response.body);
+      if (body['status'] == 'success') {
+        return AwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          animType: AnimType.rightSlide,
+          title: 'success',
+          desc: 'cv is sended',
+          btnCancelOnPress: () {},
+          btnOkOnPress: () {},
+        )..show();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +112,10 @@ class _JobOfferDetState extends State<JobOfferDet> {
                                 ));
                               },
                               child: ProfileTag(
-                                image: NetworkImage(image_root+
+                                image: NetworkImage(image_root +
                                     "${widget.data['offers']['cprofile']['image_url']}"),
                                 name: Text(
-                                "${widget.data['offers']['cprofile']['company']['name']}",
+                                  "${widget.data['offers']['cprofile']['company']['name']}",
                                   style: subbfont,
                                 ),
                               ),
@@ -88,8 +136,8 @@ class _JobOfferDetState extends State<JobOfferDet> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(mainborder),
                     image: DecorationImage(
-                      image: NetworkImage(image_root+
-                                    "${widget.data['offers']['image_url']}"),
+                      image: NetworkImage(
+                          image_root + "${widget.data['offers']['image_url']}"),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -110,12 +158,17 @@ class _JobOfferDetState extends State<JobOfferDet> {
                         "#${widget.data['offers']['hashtag']}",
                         style: bluefont,
                       ),
-                      CircularButton(
-                        icon: Icon(
-                          Icons.send_rounded,
-                          color: Colors.white,
-                        ),
-                      ),
+                   type!=null &&   type == 'user'
+                          ? CircularButton(
+                              onPressed: () async {
+                                await sendcv('${widget.data['offers']['id']}');
+                              },
+                              icon: Icon(
+                                Icons.send_rounded,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(''),
                     ],
                   ),
                 ),

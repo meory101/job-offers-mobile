@@ -106,6 +106,7 @@ class _EmpProfileState extends State<EmpProfile> {
     GetUserProfile();
     super.initState();
   }
+  
 
   @override
   Widget build(BuildContext context) {

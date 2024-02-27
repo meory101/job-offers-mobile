@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:http/http.dart' as http;
@@ -7,14 +6,17 @@ import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
 import 'package:kml/db/links.dart';
 import 'package:kml/pages/home.dart';
+import 'package:kml/pages/map.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CProfileInfo extends StatefulWidget {
   String work;
+  String lat;
+  String long;
 
-  CProfileInfo({required this.work});
+  CProfileInfo({required this.work, required this.lat, required this.long});
 
   @override
   State<CProfileInfo> createState() => _CProfileInfoState();
@@ -22,16 +24,19 @@ class CProfileInfo extends StatefulWidget {
 
 class _CProfileInfoState extends State<CProfileInfo> {
   GlobalKey<FormState> fkey = new GlobalKey();
-
+  String? latlong;
   TextEditingController work = TextEditingController();
   UpdateCompanyprofile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map data = {
+
+    var data = {
       'id': '${prefs.getString('profile_id')}',
-      'work_type': '${work.text}',
-      'location': 'this is location',
+      'wo': '${work.text}',
+      'lat': latlong == null ? widget.lat : '${latlong!.split('*')[0]}',
+      'long': latlong ==null ? widget.long : '${latlong!.split('*')[1]}',
       'com_id': '${prefs.getString('com_id')}'
     };
+    print(data);
     var body;
 
     if (fkey.currentState!.validate()) {
@@ -60,6 +65,7 @@ class _CProfileInfoState extends State<CProfileInfo> {
     if (widget.work != null) {
       work.text = widget.work;
     }
+    latlong = null;
 
     super.initState();
   }
@@ -102,6 +108,14 @@ class _CProfileInfoState extends State<CProfileInfo> {
                     height: 20,
                   ),
                   RecButton(
+                      fun: () async {
+                        latlong =
+                            await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) {
+                            return Map(lat: widget.lat, long: widget.long);
+                          },
+                        ));
+                      },
                       color: maincolor,
                       label: Text(
                         'Location',

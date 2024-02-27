@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:kml/pages/map.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,7 +17,7 @@ class companyinfo extends StatelessWidget {
   companyinfo({super.key});
   final TextEditingController s = TextEditingController();
   GlobalKey<FormState> fkey = new GlobalKey();
-
+  String? latlong;
   File? image;
   File? cover;
   SelectImage() async {
@@ -34,24 +34,32 @@ class companyinfo extends StatelessWidget {
   Widget build(BuildContext context) {
     CreateComProfile() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      Map data = {
-        'company_id': '${prefs.getString('com_id')}',
-        'work_type': '${s.text}',
-        'location': 'fjfjjf',
-      };
-      if (fkey.currentState!.validate() && image != null && cover != null) {
-       try{
-         var body = await postWithMultiFile(
-            create_com_profile, data, [image!, cover!], ['image', 'cover']);
-        print(body);
-        if (body['status'] == 'success') {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) {
-              return Home(type: "comp",);
-            },
-          ));
-        }
-       } catch (e) {}
+    
+      if (fkey.currentState!.validate() &&
+          image != null &&
+          cover != null &&
+          latlong != null) {
+             List<String> latlong1 = latlong!.split('*');
+        var data = {
+          'company_id': '${prefs.getString('com_id')}',
+          'work_type': '${s.text}',
+          'lat': '${latlong1[0]}',
+          'long': '${latlong1[1]}',
+        };
+        try {
+          var body = await postWithMultiFile(
+              create_com_profile, data, [image!, cover!], ['image', 'cover']);
+          print(body);
+          if (body['status'] == 'success') {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) {
+                return Home(
+                  type: "comp",
+                );
+              },
+            ));
+          }
+        } catch (e) {}
       } else {
         AwesomeDialog(
           context: context,
@@ -133,6 +141,15 @@ class companyinfo extends StatelessWidget {
                       child: InkWell(
                           child: RecButton(
                               color: maincolor,
+                              fun: () async {
+                                latlong = await Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return Map();
+                                  },
+                                ));
+                                print(latlong);
+                              },
                               label: Text(
                                 "Add your Location",
                                 style: subwfont,

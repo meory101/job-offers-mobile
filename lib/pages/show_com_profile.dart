@@ -13,39 +13,43 @@ import 'package:kml/components/rectangular_button.dart';
 import 'package:kml/db/links.dart';
 import 'package:kml/pages/edit_Uprofile_info.dart';
 import 'package:kml/pages/show_experience.dart';
+import 'package:kml/pages/show_job_opportunity.dart';
+import 'package:kml/pages/show_map.dart';
 import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ShowEmpProfile extends StatefulWidget {
-  String user_id;
-  ShowEmpProfile({required this.user_id});
+class ShowComProfile extends StatefulWidget {
+  String com_id;
+  String profile_id;
+  ShowComProfile({required this.com_id, required this.profile_id});
   @override
-  State<ShowEmpProfile> createState() => _ShowEmpProfileState();
+  State<ShowComProfile> createState() => _ShowComProfileState();
 }
 
-class _ShowEmpProfileState extends State<ShowEmpProfile> {
+class _ShowComProfileState extends State<ShowComProfile> {
   var profile_info;
   GetProfile() async {
-    print(widget.user_id);
+    print('laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    print(comprofile + '/${widget.com_id}');
     http.Response response = await http.get(
-      Uri.parse(userprofile + '/${widget.user_id}'),
+      Uri.parse(comprofile + '/${widget.com_id}'),
     );
 
     var body = jsonDecode(response.body);
     if (body['status'] == 'success') {
       profile_info = body['message'];
-      GetUserExps();
+      GetOffers();
       setState(() {});
     }
   }
 
-  GetUserExps() async {
+  GetOffers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     http.Response response = await http.get(
-      Uri.parse(userexps + '/${prefs.getString('profile_id')}'),
+      Uri.parse(getOffer + '/${widget.profile_id}'),
     );
     var body = jsonDecode(response.body);
     print(body);
@@ -58,8 +62,9 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
 
   @override
   void initState() {
+    print(getcoffers + '${widget.profile_id}');
+
     GetProfile();
-    print(widget.user_id);
     super.initState();
   }
 
@@ -124,7 +129,7 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                       child: profile_info == null
                           ? CircularProgressIndicator()
                           : Text(
-                              "${profile_info['user']['name']}",
+                              "${profile_info['company']['name']}",
                               style: titlew,
                             ),
                     )
@@ -152,13 +157,13 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                       alignment: Alignment.topLeft,
                       child: Label(
                         title: Text(
-                          'Graduated From ',
+                          'Worked type ',
                           style: subbfont,
                         ),
                         content: profile_info == null
                             ? CircularProgressIndicator()
                             : Text(
-                                '${profile_info['graduated_at']}',
+                                '${profile_info['work_type']}',
                                 style: greyfont,
                               ),
                         icon: Icon(
@@ -168,25 +173,37 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 14),
-                      alignment: Alignment.topLeft,
-                      child: Label(
-                        icon: Icon(
-                          Icons.work_outline,
-                          color: maincolor,
-                          size: 20,
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return showMap(
+                                lat: profile_info['lat'],
+                                long: profile_info['long'],
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 14),
+                        alignment: Alignment.topLeft,
+                        child: Label(
+                          icon: Icon(
+                            Icons.work_outline,
+                            color: maincolor,
+                            size: 20,
+                          ),
+                          title: Text(
+                            'location ',
+                            style: subbfont,
+                          ),
+                          content: Text(
+                            'click here',
+                            style: greyfont,
+                          ),
                         ),
-                        title: Text(
-                          'worked At ',
-                          style: subbfont,
-                        ),
-                        content: profile_info == null
-                            ? CircularProgressIndicator()
-                            : Text(
-                                '${profile_info['worked_at']}',
-                                style: greyfont,
-                              ),
                       ),
                     ),
                     Container(
@@ -199,11 +216,11 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                           size: 20,
                         ),
                         title: Text(
-                          'Expert In ',
+                          'offers ',
                           style: subbfont,
                         ),
                         content: Text(
-                          'Experiences ',
+                          'offers here ',
                           style: greyfont,
                         ),
                       ),
@@ -213,7 +230,7 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                       height: MediaQuery.of(context).size.height / 3,
                       width: double.infinity,
                       child: FutureBuilder(
-                        future: GetUserExps(),
+                        future: GetOffers(),
                         builder: (context, AsyncSnapshot snapshot) {
                           if (snapshot.hasData) {
                             return ListView.builder(
@@ -233,8 +250,8 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) {
-                                                  return ShowExp(
-                                                      exp:
+                                                  return ShowOpp(
+                                                      offer:
                                                           snapshot.data[index]);
                                                 },
                                               ),
@@ -280,7 +297,7 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                                                   )),
                                             ),
                                             Text(
-                                              '${snapshot.data[index]['title']}',
+                                              '${snapshot.data[index]['hashtag']}',
                                               style: subbfont,
                                             )
                                           ],
@@ -293,7 +310,7 @@ class _ShowEmpProfileState extends State<ShowEmpProfile> {
                           } else {
                             return Center(
                                 child: Text(
-                              'no experiences yet',
+                              'no offers yet',
                               style: greyfont,
                             ));
                           }

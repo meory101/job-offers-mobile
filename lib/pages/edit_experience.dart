@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -115,6 +116,15 @@ class _EditExpState extends State<EditExp> {
                       height: 20,
                     ),
                     Textform(
+                         val: (p0) {
+                          if (name.text.isNotEmpty) {
+                            if (name.text.length > 20) {
+                              return '20 characters only';
+                            }
+                          } else {
+                            return 'required';
+                          }
+                        },
                         controller: name,
                         text: "Experience Title",
                         textInputType: TextInputType.name,
@@ -123,6 +133,15 @@ class _EditExpState extends State<EditExp> {
                       height: 15,
                     ),
                     Textform(
+                       val: (p0) {
+                          if (name1.text.isNotEmpty) {
+                            if (name1.text.length > 100) {
+                              return '100 characters only';
+                            }
+                          } else {
+                            return 'required';
+                          }
+                        },
                         controller: name1,
                         text: "Experience Content",
                         textInputType: TextInputType.name,
@@ -131,6 +150,16 @@ class _EditExpState extends State<EditExp> {
                       height: 15,
                     ),
                     Textform(
+                       val: (p0) {
+                          if (name2.text.isNotEmpty) {
+                            if (int.parse(name2.text) > 50 &&
+                                int.parse(name2.text) < 1) {
+                              return 'wrong exp years';
+                            }
+                          } else {
+                            return 'required';
+                          }
+                        },
                         controller: name2,
                         text: "Experience Years",
                         textInputType: TextInputType.number,

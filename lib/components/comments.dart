@@ -25,6 +25,7 @@ class _CommentsSectionState extends State<CommentsSection> {
     http.Response response = await http.get(Uri.parse(url));
 
     var body = jsonDecode(response.body);
+    print(body);
     if (body['status'] == 'success') {
       return body['message'];
     }
@@ -34,16 +35,18 @@ class _CommentsSectionState extends State<CommentsSection> {
   String? type;
   getUserType() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    type = prefs.getString('user_id');
+    type = prefs.getString('user_id') != null ? 'user' : 'comp';
   }
 
   AddComment() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     String url = addcomment;
-   if(com.text.isNotEmpty){
+    if (com.text.isNotEmpty) {
       http.Response response = await http.post(Uri.parse(url), body: {
         'content': com.text,
         'offer_id': widget.offerid,
-        'user_id': '$type'
+        'user_id': '${prefs.getString('user_id')}'
       });
 
       var body = jsonDecode(response.body);
@@ -52,7 +55,7 @@ class _CommentsSectionState extends State<CommentsSection> {
         GetComments();
         setState(() {});
       }
-   }
+    }
   }
 
   @override
@@ -63,108 +66,110 @@ class _CommentsSectionState extends State<CommentsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: GetComments(),
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-              itemCount: snapshot.data.length + 2,
-              itemBuilder: (context, index) {
-                return index == 0
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        Container(
+          height: 30,
+          padding: const EdgeInsets.only(
+            left: 20,
+            top: 15,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'comments',
+                style: titleb,
+              ),
+            ],
+          ),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height / 3 - 60,
+          margin: EdgeInsets.only(top: 40),
+          child: FutureBuilder(
+            future: GetComments(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'comments',
-                              style: titleb,
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return ShowEmpProfile(
+                                        user_id:
+                                            '${snapshot.data[index]['user']['id']}');
+                                  },
+                                ));
+                              },
+                              child: ProfileTag(
+                                image: NetworkImage(
+                                    '$image_root${snapshot.data[index]['user_profile']['image_url']}'),
+                                name: Text(
+                                    '${snapshot.data[index]['user']['name']}'),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 55, bottom: 10),
+                              child: Text(
+                                '${snapshot.data[index]['comment']['content']}',
+                                style: greyfont,
+                              ),
                             ),
                           ],
                         ),
-                      )
-                    : index == (snapshot.data.length + 2) - 1
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Textform(
-                              suffix: IconButton(
-                                icon: Icon(
-                                  Icons.send,
-                                  size: 20,
-                                  color: maincolor,
-                                ),
-                                onPressed: AddComment,
-                              ),
-                              controller: com,
-                              obscure: false,
-                              text: 'add comment',
-                              textInputType: TextInputType.text,
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 10, left: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) {
-                                        return   ShowEmpProfile(user_id:'${snapshot.data[index-1]['user']['id']}');
-                                      },
-                                    ));
-                                  },
-                                  child: ProfileTag(
-                                    image: NetworkImage(
-                                        '$image_root${snapshot.data[index - 1]['user_profile']['image_url']}'),
-                                    name: Text(
-                                        '${snapshot.data[index - 1]['user']['name']}'),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 55, bottom: 10),
-                                  child: Text(
-                                    '${snapshot.data[index - 1]['comment']['content']}',
-                                    style: greyfont,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-              });
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return Center(
-            child:
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  child: Textform(
-                    suffix: IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        size: 20,
-                        color: maincolor,
-                      ),
-                      onPressed: AddComment,
+                      );
+                    });
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return Center(
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 20),
+                        child: Text(
+                          'No comments',
+                          style: greyfont,
+                        )));
+              }
+            },
+          ),
+        ),
+        Container(
+          margin:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height / 3.2),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: type == 'user'
+              ? Textform(
+                  suffix: IconButton(
+                    icon: Icon(
+                      Icons.send,
+                      size: 20,
+                      color: maincolor,
                     ),
-                    controller: com,
-                    obscure: false,
-                    text: 'add comment',
-                    textInputType: TextInputType.text,
+                    onPressed: AddComment,
                   ),
+                  controller: com,
+                  obscure: false,
+                  text: 'add comment',
+                  textInputType: TextInputType.text,
                 )
-              
-            
-          );
-        }
-      },
+              : Text(
+                  'company account can\'t upload comment',
+                  style: greyfont,
+                ),
+        )
+      ],
     );
   }
 }

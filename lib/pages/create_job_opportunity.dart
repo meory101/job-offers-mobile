@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:kml/components/Text_form.dart';
 import 'package:kml/components/rectangular_button.dart';
 import 'package:kml/db/links.dart';
@@ -31,14 +32,15 @@ class _Create_newState extends State<Create_new> {
     if (fkey.currentState!.validate()) {
       Map data = {
         'content': '${name1.text}',
-        'date': 'd',
+        'date': '${Jiffy.now().yMMMMd}',
         'hashtag': '${name2.text}',
         'profile_id': '${prefs.getString('profile_id')}',
       };
       print(data);
       print(image);
       if (image != null) {
-        var body = await postWithMultiFile(createoffers, data, [image!], ['image']);
+        var body =
+            await postWithMultiFile(createoffers, data, [image!], ['image']);
         if (body['status'] == 'success') {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) {
@@ -123,9 +125,9 @@ class _Create_newState extends State<Create_new> {
                     ),
                     Textform(
                         val: (p0) {
-                          if (name1.text.isNotEmpty) {
-                            if (name1.text.length > 100) {
-                              return '100 characters only';
+                          if (name2.text.isNotEmpty) {
+                            if (name2.text.length > 20) {
+                              return '20 characters only';
                             }
                           } else {
                             return 'required';

@@ -105,8 +105,8 @@ class _NewExpState extends State<NewExp> {
                     Textform(
                         val: (p0) {
                           if (name.text.isNotEmpty) {
-                            if (name.text.length > 50) {
-                              return '50 characters only';
+                            if (name.text.length > 20) {
+                              return '20 characters only';
                             }
                           } else {
                             return 'required';
@@ -137,9 +137,10 @@ class _NewExpState extends State<NewExp> {
                       height: 15,
                     ),
                     Textform(
-                        val: (p0) {
+                            val: (p0) {
                           if (name2.text.isNotEmpty) {
-                            if (name2.text.length > 100) {
+                            if (int.parse(name2.text) > 50 &&
+                                int.parse(name2.text) < 1) {
                               return 'wrong exp years';
                             }
                           } else {

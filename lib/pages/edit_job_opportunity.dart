@@ -121,6 +121,15 @@ class _EditJobOppState extends State<EditJobOpp> {
                       height: 20,
                     ),
                     Textform(
+                       val: (p0) {
+                          if (name1.text.isNotEmpty) {
+                            if (name1.text.length > 100) {
+                              return '100 characters only';
+                            }
+                          } else {
+                            return 'required';
+                          }
+                        },
                         controller: name1,
                         text: "Job Opportunity Content",
                         textInputType: TextInputType.name,
@@ -129,6 +138,15 @@ class _EditJobOppState extends State<EditJobOpp> {
                       height: 15,
                     ),
                     Textform(
+                        val: (p0) {
+                          if (name2.text.isNotEmpty) {
+                            if (name2.text.length > 20) {
+                              return '20 characters only';
+                            }
+                          } else {
+                            return 'required';
+                          }
+                        },
                         controller: name2,
                         text: "#Job Name",
                         textInputType: TextInputType.name,

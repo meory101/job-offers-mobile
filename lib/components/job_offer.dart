@@ -4,20 +4,30 @@ import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
 
 class JobOffer extends StatefulWidget {
- final String location;
+  final String? location;
   final ImageProvider image;
- final String content;
- final String tag;
+  final String content;
+  final String tag;
+  String? num;
+  void Function()? onTap;
   JobOffer(
-      {required this.location,
+      {this.location,
       required this.image,
       required this.content,
-       required this.tag});
+      required this.tag,
+      this.onTap,
+      this.num});
   @override
   State<JobOffer> createState() => _JobOfferState();
 }
 
 class _JobOfferState extends State<JobOffer> {
+  @override
+  void initState() {
+    print(widget.num);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,29 +47,33 @@ class _JobOfferState extends State<JobOffer> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(mainborder),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.location,
-                  style: subbfont,
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.location_on,
-                    color: bordercolor,
-                  ),
-                ),
-              ],
-            ),
+            child: widget.location != null
+                ? InkWell(
+                    onTap: widget.onTap,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.location!,
+                          style: subbfont,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.location_on,
+                            color: bordercolor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : null,
           ),
           Container(
             height: MediaQuery.of(context).size.height / 3.5,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(mainborder),
-              image: DecorationImage(
-                  image: widget.image, fit: BoxFit.cover),
+              image: DecorationImage(image: widget.image, fit: BoxFit.cover),
             ),
           ),
           Container(

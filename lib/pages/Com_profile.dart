@@ -1,20 +1,25 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:kml/components/drawer.dart';
 import 'package:kml/components/label.dart';
 import 'package:kml/components/profile_tag.dart';
 import 'package:kml/db/links.dart';
+import 'package:kml/db/post_with_file.dart';
 import 'package:kml/pages/Login.dart';
 import 'package:kml/pages/create_job_opportunity.dart';
 import 'package:kml/pages/edit_Cprofile_info.dart';
 import 'package:kml/pages/edit_job_opportunity.dart';
 import 'package:kml/pages/edit_Uprofile_info.dart';
 import 'package:kml/pages/show_job_opportunity.dart';
+import 'package:kml/pages/show_map.dart';
 import 'package:kml/theme/borders.dart';
 import 'package:kml/theme/colors.dart';
 import 'package:kml/theme/fonts.dart';
@@ -33,10 +38,13 @@ class _ComprofileState extends State<Comprofile> {
   var offer;
 
   GetComProfile() async {
+    print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(comprofile + '/${prefs.getString('com_id')}');
     http.Response response = await http.get(
       Uri.parse(comprofile + '/${prefs.getString('com_id')}'),
     );
+    print('/${prefs.getString('com_id')}');
     var body = jsonDecode(response.body);
     if (body['status'] == 'success') {
       profile_info = body['message'];
@@ -81,6 +89,15 @@ class _ComprofileState extends State<Comprofile> {
     super.initState();
   }
 
+  UpdateComProfile(files, names) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map data = {'id': '${prefs.getString('profile_id')}'};
+    var body = await postWithMultiFile(update_com_profile, data, files, names);
+    if (body['status'] == 'success') {
+      GetComProfile();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,9 +120,12 @@ class _ComprofileState extends State<Comprofile> {
               //    style: titlew,
               // ),
               accountEmail: Text("company account", style: subwfont),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage("assets/images/g2.jpg"),
-              ),
+              currentAccountPicture: profile_info == null
+                  ? CircularProgressIndicator()
+                  : CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          image_root + "${profile_info['image_url']}"),
+                    ),
             ),
           ),
           InkWell(
@@ -114,6 +134,8 @@ class _ComprofileState extends State<Comprofile> {
                 builder: (context) {
                   return CProfileInfo(
                     work: profile_info['work_type'],
+                    lat: '${profile_info['lat']}',
+                    long: '${profile_info['long']}',
                   );
                 },
               ));
@@ -156,8 +178,9 @@ class _ComprofileState extends State<Comprofile> {
             onTap: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.clear();
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => Loginpage()));
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Loginpage()),
+                  (route) => false);
             },
             child: ListTile(
               leading: Icon(
@@ -177,14 +200,34 @@ class _ComprofileState extends State<Comprofile> {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/3.jpg"),
-                      fit: BoxFit.cover),
-                ),
+              InkWell(
+                onTap: () async {
+                  var res = await ImagePicker.platform
+                      .getImageFromSource(source: ImageSource.gallery);
+                  if (res != null) {
+                    UpdateComProfile([File(res.path)], ['cover']);
+                  }
+                },
+                child: profile_info == null
+                    ? Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/t.jpg"),
+                              fit: BoxFit.cover),
+                        ),
+                      )
+                    : Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  image_root + '${profile_info['cover_url']}'),
+                              fit: BoxFit.cover),
+                        ),
+                      ),
               ),
               Positioned(
                 top: 50,
@@ -193,13 +236,32 @@ class _ComprofileState extends State<Comprofile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ProfileTag(
-                      image: AssetImage("assets/images/g2.jpg"),
-                      radius: 50,
-                      name: Text(
-                        '',
-                        style: titleb,
-                      ),
+                    InkWell(
+                      onTap: () async {
+                        var res = await ImagePicker.platform
+                            .getImageFromSource(source: ImageSource.gallery);
+                        if (res != null) {
+                          UpdateComProfile([File(res.path)], ['image']);
+                        }
+                      },
+                      child: profile_info == null
+                          ? ProfileTag(
+                              image: AssetImage("assets/images/user.png"),
+                              radius: 50,
+                              name: Text(
+                                '',
+                                style: titleb,
+                              ),
+                            )
+                          : ProfileTag(
+                              image: NetworkImage(
+                                  image_root + '${profile_info['image_url']}'),
+                              radius: 50,
+                              name: Text(
+                                '',
+                                style: titleb,
+                              ),
+                            ),
                     ),
                     profile_info == null
                         ? CircularProgressIndicator()
@@ -264,25 +326,37 @@ class _ComprofileState extends State<Comprofile> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 14),
-                      alignment: Alignment.topLeft,
-                      child: Label(
-                        icon: Icon(
-                          Icons.location_on,
-                          color: maincolor,
-                          size: 20,
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return showMap(
+                                lat: profile_info['lat'],
+                                long: profile_info['long'],
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 14),
+                        alignment: Alignment.topLeft,
+                        child: Label(
+                          icon: Icon(
+                            Icons.location_on,
+                            color: maincolor,
+                            size: 20,
+                          ),
+                          title: Text(
+                            'Location',
+                            style: subbfont,
+                          ),
+                          content: Text(
+                            'click here',
+                            style: greyfont,
+                          ),
                         ),
-                        title: Text(
-                          'Location',
-                          style: subbfont,
-                        ),
-                        content: profile_info == null
-                            ? CircularProgressIndicator()
-                            : Text(
-                                '${profile_info['location']}',
-                                style: greyfont,
-                              ),
                       ),
                     ),
                     Container(
