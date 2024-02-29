@@ -168,6 +168,7 @@ class userinfo extends StatelessWidget {
                           child: RecButton(
                               fun: SelectFile,
                               color: maincolor,
+                              
                               label: Text(
                                 "Add your CV",
                                 style: subwfont,

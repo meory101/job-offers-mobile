@@ -50,7 +50,7 @@ getInbox() async {
   print(Type);
   url = Type == "user"
       ? getuoffers + '/${prefs.getString('user_id')}'
-      : getcoffers + '/${prefs.getString('com_id')}';
+      : getcoffers + '/${prefs.getString('profile_id')}';
   print(url);
   http.Response response = await http.get(Uri.parse(url!));
   var body = jsonDecode(response.body);
@@ -247,11 +247,11 @@ class _InboxState extends State<Inbox> {
                                                     width: 20,
                                                   ),
                                                   IconButton(
-                                                    onPressed: ()async {
+                                                    onPressed: () async {
                                                       print(
                                                           '${snapshot.data[index]['usersdata'][i]['message']['cv_url']}');
-                                                            await getPath(
-                                                    '${snapshot.data[index]['usersdata'][i]['message']['cv_url']}');
+                                                      await getPath(
+                                                          '${snapshot.data[index]['usersdata'][i]['message']['cv_url']}');
                                                     },
                                                     icon: Icon(
                                                       CupertinoIcons
