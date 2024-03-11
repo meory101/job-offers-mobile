@@ -56,9 +56,14 @@ class _ShowOppState extends State<ShowOpp> {
                   SizedBox(
                     height: 30,
                   ),
-                  Text(
-                    '#${widget.offer['hashtag']}',
-                    style: submain,
+                  Row(
+                    children: [
+                      Text(
+                        '#${widget.offer['hashtag']}',
+                        style: submain,
+                      ),
+                      
+                    ],
                   ),
                   SizedBox(
                     height: 30,

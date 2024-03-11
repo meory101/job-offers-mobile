@@ -154,9 +154,13 @@ class _JobOfferDetState extends State<JobOfferDet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "#${widget.data['offers']['hashtag']}",
-                        style: bluefont,
+                      Row(
+                        children: [
+                          Text(
+                            "#${widget.data['offers']['hashtag']}",
+                            style: bluefont,
+                          ),
+                        ],
                       ),
                    type!=null &&   type == 'user'
                           ? CircularButton(

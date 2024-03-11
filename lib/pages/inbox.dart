@@ -209,7 +209,7 @@ class _InboxState extends State<Inbox> {
                                       top: 6, left: 20, right: 20),
                                   child: ListView.builder(
                                     itemCount: snapshot
-                                        .data[index]['offerusers'].length,
+                                        .data[index]['data'].length,
                                     itemBuilder: (context, i) {
                                       return Container(
                                         margin: EdgeInsets.only(

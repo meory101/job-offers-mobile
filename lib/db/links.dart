@@ -1,4 +1,4 @@
-String server_link = 'http://192.168.213.164:8001';
+String server_link = 'http://192.168.43.227:8001';
 String image_root = server_link + '/storage/';
 String usignup = server_link + '/api/' + 'USignUp';
 String csignup = server_link + '/api/' + 'CSignUp';
